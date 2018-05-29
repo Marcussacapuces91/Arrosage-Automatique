@@ -1,0 +1,10 @@
+Arrosage-Automatique
+Copyright 2018 Marc SIBERT
+
+Le code source est entièrement original. Toutefois du fait de l'utilisation de 
+librairies sous licences libres, le code compilé utilise d'autres portions de 
+code distribués par leurs proprétaires respectifs au travers de l'IDE Arduino®.
+Ces librairies sont listées ci-dessous (sauf omission) :
+
+- Arduino AVR Boards par Arduino ; 
+- LiquidCrystal Library par Arduino & Adafruits ;
