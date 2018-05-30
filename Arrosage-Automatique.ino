@@ -18,14 +18,22 @@
 
 void setup() {
   APP.begin();
-  APP.lcd.print(F("Bonjour monde !"));
+//  APP.lcd.print(F("Bonjour monde !"));
 }
 
 void loop() {
-  APP.lcd.setCursor(0,1);
-  APP.lcd.print(millis());
-  APP.lcd.print(F("ms "));
+  APP.lcd.setCursor(0,0);
   APP.lcd.print(APP.getTemp(),1);
+  APP.lcd.print(',');
+  APP.lcd.print(APP.getTemp(INTERNAL),1);
   APP.lcd.print(char(223));
-  APP.lcd.print('C');
+  APP.lcd.print(F("C "));
+  
+  APP.lcd.setCursor(0,1);
+//  APP.lcd.print(millis());
+//  APP.lcd.print(F("ms "));
+  APP.lcd.print(APP.getMoisture());
+  APP.lcd.print(F("  "));
+  
+  delay(1000);
 }
