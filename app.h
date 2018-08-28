@@ -75,8 +75,8 @@ public:
  * @param w Designe le capteur à utiliser (0 pour LM35 par défaut, ou INTERNAL pour la pude du contrôleur).
  * @return Un nombre réel indiquant la température en °C.
  */
-  float getTemp(const int w = 0) const {
-    if (w == INTERNAL) {
+  float getTemp(const byte w = 0) const {
+    if (INTERNAL == w) {
 // Following code is copyright Arduino and come from http://playground.arduino.cc/Main/InternalTemperatureSensor
 // The internal temperature has to be used with the internal reference of 1.1V.
 // Channel 8 can not be selected with the analogRead function yet.
@@ -84,9 +84,7 @@ public:
 // Set the internal reference and mux.
       ADMUX = (_BV(REFS1) | _BV(REFS0) | _BV(MUX3));
       ADCSRA |= _BV(ADEN);  // enable the ADC
-    
       delay(20);            // wait for voltages to become stable.
-    
       ADCSRA |= _BV(ADSC);  // Start the ADC
     
 // Detect end-of-conversion
@@ -102,16 +100,19 @@ public:
       return t;
     } else {
       analogReference(INTERNAL);
+      analogRead(LM35_MES);   // throw away first mesure
       delay(20);
       const unsigned a0 = analogRead(LM35_MES);
       const unsigned a1 = analogRead(LM35_REF);
+      
 // 10 mV/°C 0°C == 0mV, valeurs négatives possibles.
-      return (a0-a1) * 110 / 1023.0f;      
+      return (a0-a1) * 110 / 1023.0f;
     }
   }
 
   byte getMoisture(const unsigned airValue = 520, const unsigned waterValue = 260) const {
     analogReference(DEFAULT);
+    analogRead(A2);   // throw away first mesure
     delay(20);
     const unsigned h = analogRead(A2);
     return (h < waterValue) ? 100 : ((h > airValue) ? 0 : 100 - 100 * (h - waterValue) / (airValue - waterValue));

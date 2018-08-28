@@ -23,15 +23,16 @@ void setup() {
 
 void loop() {
   APP.lcd.setCursor(0,0);
-  APP.lcd.print(APP.getTemp(),1);
-  APP.lcd.print(',');
+  APP.lcd.print(F("C:"));
+  APP.lcd.print(APP.getTemp(EXTERNAL),1);
+  APP.lcd.print(F(",I:"));
   APP.lcd.print(APP.getTemp(INTERNAL),1);
-  APP.lcd.print(char(223));
+  APP.lcd.print('\x0df'); // char(223) = '°'
   APP.lcd.print(F("C "));
   
   APP.lcd.setCursor(0,1);
-//  APP.lcd.print(millis());
-//  APP.lcd.print(F("ms "));
+  APP.lcd.print(millis());
+  APP.lcd.print(F("ms "));
   APP.lcd.print(APP.getMoisture());
   APP.lcd.print(F("  "));
   
