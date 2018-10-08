@@ -163,70 +163,27 @@ void loop1() {
  * 
  * Durée d'arrosage = P * (consigne - mesure)
  */
-void loop2() {
-
-  if ( decodeIR(consigne) ) affichageConsigne(consigne);
-
-  const auto s = millis();
-  if ((s % 500) > 0) return;  // boucle tous les 1/4 de sec
-
-  const auto temp = Bib.getTemp();
-  const auto humi = Bib.getMoisture();
-  const int pompe = temp < 30 ? 10 * (consigne - humi) : 0;
-
-  if (pompe < 0) {
-    Bib.setPump(false);
-  } else if (pompe > 450) {
-    Bib.setPump(true);
-  } else {
-    Bib.setPump(true);
-    delay(pompe);
-    Bib.setPump(false);
-  }
-  
-  affichageDefaut(temp, humi);
-
-  Serial.print(consigne);
-  Serial.print(',');
-  Serial.print(humi);
-  Serial.print(',');
-  Serial.println(pompe);
- 
-}
-
-/**
- * Régulation proportionnelle.
- * 
- * Durée d'arrosage = P * Somme(consigne - mesure)
- */
 void loop() {
-  static long somme = 0;
+
   if ( decodeIR(consigne) ) affichageConsigne(consigne);
-
-  const auto s = millis();
-  if ((s % 500) > 0) return;  // boucle tous les 1/4 de sec
-
   const auto temp = Bib.getTemp();
   const auto humi = Bib.getMoisture();
-  somme += consigne - humi;
-  const int pompe = 1 * somme;
+  affichageDefaut(temp, humi);
 
-  if (pompe < 0 || temp > 30) {
-    Bib.setPump(false);
-  } else if (pompe > 450) {
+  const auto s = millis();
+  if ((s % 30000) > 0) return;  // boucle tous les 30 de sec
+
+  const int pompe = temp < 30 ? 100 * (consigne - humi) : 0;
+
+  if (pompe > 0) {
     Bib.setPump(true);
-  } else {
-    Bib.setPump(true);
-    delay(pompe);
+    delay(pompe > 5000 ? 5000 : pompe);
     Bib.setPump(false);
   }
-  
-  affichageDefaut(temp, humi);
 
   Serial.print(consigne);
   Serial.print(',');
   Serial.print(humi);
   Serial.print(',');
   Serial.println(pompe);
- 
 }
